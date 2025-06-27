@@ -11,6 +11,8 @@ import readingTipsRoutes from "./routes/readingTips.js";
 import resourcesRoutes from "./routes/resources.js";
 import adminsRoutes from "./routes/admins.js";
 import publicRoutes from "./routes/public.js";
+import ageGroup2 from "./routes/ageGroup2.js";
+import readingImpactsRoutes from "./routes/readingImpacts.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -30,7 +32,8 @@ app.use("/api/reading-tips", readingTipsRoutes);
 app.use("/api/resources", resourcesRoutes);
 app.use("/api/admins", adminsRoutes);
 app.use("/api/public", publicRoutes);
-
+app.use("/api", ageGroup2);
+app.use("/api/reading-impacts", readingImpactsRoutes);
 // Health check
 app.get("/health", (req, res) => {
   res.json({ status: "OK", message: "Server is running" });

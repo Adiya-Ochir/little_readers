@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { BookOpen, Menu, X } from 'lucide-react';
+import React, { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { BookOpen, Menu, X } from "lucide-react";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -9,11 +9,11 @@ const Navbar = () => {
   const isActive = (path: string) => location.pathname === path;
 
   const navItems = [
-    { path: '/', label: 'Нүүр', icon: null },
-    { path: '/reading-tips', label: 'Уншлагын зөвлөгөө', icon: null },
-    { path: '/development', label: 'Хүүхдийн хөгжил', icon: null },
-    { path: '/books', label: 'Номын санал', icon: null },
-    { path: '/resources', label: 'Материал', icon: null },
+    { path: "/", label: "Нүүр", icon: null },
+    { path: "/reading-tips", label: "Уншлагын зөвлөгөө", icon: null },
+    { path: "/development", label: "Хүүхдийн хөгжил", icon: null },
+    { path: "/books", label: "Номын санал", icon: null },
+    { path: "/resources", label: "Материал", icon: null },
   ];
 
   return (
@@ -24,7 +24,7 @@ const Navbar = () => {
           <Link to="/" className="flex items-center space-x-2">
             <BookOpen className="h-8 w-8 text-primary-600" />
             <span className="text-xl font-bold text-gray-800">
-              Хүүхдийн ном
+              Бяцхан уншигчид
             </span>
           </Link>
 
@@ -36,8 +36,8 @@ const Navbar = () => {
                 to={item.path}
                 className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
                   isActive(item.path)
-                    ? 'bg-primary-100 text-primary-700'
-                    : 'text-gray-600 hover:text-primary-600 hover:bg-gray-50'
+                    ? "bg-primary-100 text-primary-700"
+                    : "text-gray-600 hover:text-primary-600 hover:bg-gray-50"
                 }`}
               >
                 {item.label}
@@ -70,8 +70,8 @@ const Navbar = () => {
                   to={item.path}
                   className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 ${
                     isActive(item.path)
-                      ? 'bg-primary-100 text-primary-700'
-                      : 'text-gray-600 hover:text-primary-600 hover:bg-gray-50'
+                      ? "bg-primary-100 text-primary-700"
+                      : "text-gray-600 hover:text-primary-600 hover:bg-gray-50"
                   }`}
                   onClick={() => setIsOpen(false)}
                 >

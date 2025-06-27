@@ -3,19 +3,19 @@ import { supabase } from "../config/database.js";
 
 const router = express.Router();
 
-// Public routes for frontend (no authentication required)
+// routes/public.js
 router.get("/development/all", async (req, res) => {
   try {
     const [areas, ages, impacts] = await Promise.all([
       supabase
         .from("development_areas")
-        .select("*") // ← заавал тодорхой заа
+        .select("*")
         .eq("is_active", true)
         .order("created_at", { ascending: true }),
 
       supabase
         .from("age_groups")
-        .select("*") // ← validate field names
+        .select("*")
         .eq("is_active", true)
         .order("min_age", { ascending: true }),
 
@@ -200,6 +200,39 @@ router.get("/reading-impacts", async (req, res) => {
   const { data, error } = await supabase.from("reading_impacts").select("*");
   if (error) return res.status(400).json({ error: error.message });
   res.json({ readingImpacts: data });
+});
+
+router.get("/reading-tips/full", async (req, res) => {
+  try {
+    const [tipsRes, ageRes] = await Promise.all([
+      supabase
+        .from("reading_tips")
+        .select("*")
+        .eq("is_active", true)
+        .order("sort_order", { ascending: true }),
+
+      supabase
+        .from("age_group2")
+        .select("*")
+        .eq("is_active", true)
+        .order("created_at", { ascending: true }),
+    ]);
+
+    if (tipsRes.error || ageRes.error) {
+      return res.status(500).json({
+        error:
+          tipsRes.error?.message || ageRes.error?.message || "Алдаа гарлаа.",
+      });
+    }
+
+    return res.json({
+      tips: tipsRes.data || [],
+      ageGroups: ageRes.data || [],
+    });
+  } catch (err) {
+    console.error("❌ Server error:", err);
+    return res.status(500).json({ error: "Уншлагын зөвлөмж татаж чадсангүй" });
+  }
 });
 
 export default router;

@@ -18,6 +18,7 @@ import BooksManager from "../components/dashboard/BooksManager";
 import CategoriesManager from "../components/dashboard/CategoriesManager";
 import AdminsManager from "../components/dashboard/AdminsManager";
 import DevelopmentManager from "@/components/dashboard/DevelopmentManager";
+import ReadingTipsManager from "@/components/dashboard/ReadingTipsManager";
 
 interface Admin {
   name: string;
@@ -159,6 +160,7 @@ const Dashboard: React.FC = () => {
                 <Route path="/books" element={<BooksManager />} />
                 <Route path="/categories" element={<CategoriesManager />} />
                 <Route path="/development" element={<DevelopmentManager />} />
+                <Route path="/tips" element={<ReadingTipsManager />} />
                 {admin.role === "super_admin" && (
                   <Route path="/admins" element={<AdminsManager />} />
                 )}

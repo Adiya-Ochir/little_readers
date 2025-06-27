@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as ToastPrimitives from "@radix-ui/react-toast";
-import { cva, type VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import { X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -29,6 +29,7 @@ const toastVariants = cva(
         default: "border bg-background text-foreground",
         destructive:
           "destructive group border-destructive bg-destructive text-destructive-foreground",
+        success: "border border-green-500 bg-green-100 text-green-900",
       },
     },
     defaultVariants: {
@@ -37,10 +38,13 @@ const toastVariants = cva(
   }
 );
 
+type ToastVariant = "default" | "destructive" | "success";
+
 const Toast = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Root>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> &
-    VariantProps<typeof toastVariants>
+  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> & {
+    variant?: ToastVariant;
+  }
 >(({ className, variant, ...props }, ref) => {
   return (
     <ToastPrimitives.Root
@@ -112,7 +116,7 @@ ToastDescription.displayName = ToastPrimitives.Description.displayName;
 type ToastProps = React.ComponentPropsWithoutRef<typeof Toast> & {
   title?: React.ReactNode;
   description?: React.ReactNode;
-  variant?: "default" | "destructive";
+  variant?: ToastVariant;
 };
 
 type ToastActionElement = React.ReactElement<typeof ToastAction>;

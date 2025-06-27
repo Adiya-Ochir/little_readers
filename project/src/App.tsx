@@ -8,6 +8,7 @@ import Resources from "./pages/Resources";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import { Toaster } from "@/components/ui/toaster";
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
               <>
                 <Navbar />
                 <Home />
+                <Footer />
               </>
             }
           />
@@ -30,6 +32,7 @@ function App() {
               <>
                 <Navbar />
                 <ReadingTips />
+                <Footer />
               </>
             }
           />
@@ -39,6 +42,7 @@ function App() {
               <>
                 <Navbar />
                 <Development />
+                <Footer />
               </>
             }
           />
@@ -48,6 +52,7 @@ function App() {
               <>
                 <Navbar />
                 <BookRecommendations />
+                <Footer />
               </>
             }
           />
@@ -57,6 +62,7 @@ function App() {
               <>
                 <Navbar />
                 <Resources />
+                <Footer />
               </>
             }
           />

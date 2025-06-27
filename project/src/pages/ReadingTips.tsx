@@ -1,111 +1,66 @@
-import React from 'react';
-import { Clock, Heart, Volume2, Smile, BookOpen, Users } from 'lucide-react';
+"use client";
+
+import React, { useEffect, useState } from "react";
+import {
+  Clock,
+  Heart,
+  Volume2,
+  Smile,
+  BookOpen,
+  Users,
+  HelpCircle,
+} from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+
+const iconMap = {
+  Clock,
+  Heart,
+  Volume2,
+  Smile,
+  BookOpen,
+  Users,
+  HelpCircle,
+};
+
+interface ReadingTip {
+  icon: keyof typeof iconMap;
+  title: string;
+  description: string;
+  tips: string[];
+}
+
+interface AgeGroup {
+  age: string;
+  characteristics: string[];
+  recommendations: string[];
+}
+
+interface TipsData {
+  tips: ReadingTip[];
+  ageGroups: AgeGroup[];
+}
 
 const ReadingTips = () => {
-  const tips = [
-    {
-      icon: Clock,
-      title: 'Тогтмол цаг гаргах',
-      description: 'Өдөр бүр тогтсон цагт ном уншиж өгөх дадал үүсгэх нь чухал. Орой унтахын өмнө эсвэл өглөө сэрсний дараа тогтсон цагт уншаарай.',
-      tips: [
-        'Өдөрт 15-20 минут хангалттай',
-        'Тогтсон цагт уншах дадал үүсгэх',
-        'Хүүхэд ядарсан үед албадахгүй байх'
-      ]
-    },
-    {
-      icon: Heart,
-      title: 'Сонирхолтой орчин бүтээх',
-      description: 'Уншлагыг хүүхдэд таатай, сонирхолтой болгохын тулд тохиромжтой орчин бүтээх хэрэгтэй.',
-      tips: [
-        'Тайван, гэрэлтэй газар сонгох',
-        'Хамтдаа суух тохиромжтой газар бэлтгэх',
-        'Телевиз, утас зэрэг анхаарал сарниулах зүйлсийг хаах'
-      ]
-    },
-    {
-      icon: Volume2,
-      title: 'Дуу хоолойгоо өөрчлөх',
-      description: 'Өөр өөр дүрийн хувьд дуу хоолойгоо өөрчлөн уншвал хүүхэд илүү сонирхон сонсоно.',
-      tips: [
-        'Дүр тус бүрт өөр дуу хоолой ашиглах',
-        'Инээд, гайхшрал зэрэг сэтгэл хөдлөлийг илэрхийлэх',
-        'Хүүхдийг дуурайлгах, хамт дуулахыг урих'
-      ]
-    },
-    {
-      icon: Smile,
-      title: 'Интерактив байх',
-      description: 'Зөвхөн уншихаас гадна хүүхэдтэй ярилцаж, асуулт асууж, санал бодлыг нь сонсох.',
-      tips: [
-        'Зургийн талаар асуулт асуух',
-        'Дараа нь юу болох талаар таамаглуулах',
-        'Хүүхдийн санал бодлыг сонсох'
-      ]
-    },
-    {
-      icon: BookOpen,
-      title: 'Зөв ном сонгох',
-      description: 'Хүүхдийн нас, сонирхол, хөгжлийн түвшинд тохирсон ном сонгох нь чухал.',
-      tips: [
-        'Насанд тохирсон агуулга сонгох',
-        'Зургийн чанар сайн номыг сонгох',
-        'Хүүхдийн сонирхлыг харгалзах'
-      ]
-    },
-    {
-      icon: Users,
-      title: 'Хамтдаа оролцох',
-      description: 'Гэр бүлийн бүх гишүүн уншлагын үйл ажиллагаанд оролцох нь чухал.',
-      tips: [
-        'Эцэг эх хоёулаа ном уншиж өгөх',
-        'Ах эгч нар хамт оролцуулах',
-        'Номын талаар гэр бүлээрээ ярилцах'
-      ]
-    }
-  ];
+  const [data, setData] = useState<TipsData | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  const ageGroups = [
-    {
-      age: '0-2 нас',
-      characteristics: [
-        'Өнгө, дуу авиа сонирхдог',
-        'Богино анхаарал',
-        'Зургийг илүү их харах дуртай'
-      ],
-      recommendations: [
-        'Том зурагтай ном',
-        'Хүрэх боломжтой материалаар хийсэн',
-        '5-10 минут уншах'
-      ]
-    },
-    {
-      age: '3-5 нас',
-      characteristics: [
-        'Түүх сонсох дуртай',
-        'Асуулт их асуудаг',
-        'Дүрд нэрлэх дуртай'
-      ],
-      recommendations: [
-        'Энгийн үйл явдалтай түүх',
-        'Давтагдах хэсэг бүхий ном',
-        '15-20 минут уншах'
-      ]
-    },
-    {
-      age: '6-8 нас',
-      characteristics: [
-        'Өөрөө уншиж сурч байгаа',
-        'Илүү урт түүх сонсох чаддаг',
-        'Дүрүүдтэй өөрийгөө адилтгах'
-      ],
-      recommendations: [
-        'Илүү нарийвчилсан түүх',
-        'Цуврал номнууд',
-        '20-30 минут уншах'
-      ]
-    }
-  ];
+  useEffect(() => {
+    const fetchTips = async () => {
+      try {
+        const res = await fetch(
+          "http://localhost:5000/api/public/reading-tips/full"
+        );
+        const json = await res.json();
+        setData(json);
+      } catch (err) {
+        console.error("Failed to fetch reading tips:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTips();
+  }, []);
 
   return (
     <div className="gradient-bg min-h-screen py-12">
@@ -115,76 +70,97 @@ const ReadingTips = () => {
             Уншлагын зөвлөгөө
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Хүүхдэд ном уншиж өгөх арга барил, техникүүд болон насны онцлогийг харгалзсан зөвлөмжүүд
+            Хүүхдэд ном уншиж өгөх арга барил, техникүүд болон насны онцлогийг
+            харгалзсан зөвлөмжүүд
           </p>
         </div>
 
-        {/* Reading Tips */}
+        {/* Tips */}
         <section className="mb-20">
           <h2 className="section-title">Үндсэн зөвлөгөөнүүд</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {tips.map((tip, index) => (
-              <div key={index} className="card p-6">
-                <tip.icon className="h-12 w-12 text-primary-500 mb-4" />
-                <h3 className="text-xl font-semibold text-gray-800 mb-3">
-                  {tip.title}
-                </h3>
-                <p className="text-gray-600 mb-4 leading-relaxed">
-                  {tip.description}
-                </p>
-                <ul className="space-y-2">
-                  {tip.tips.map((item, idx) => (
-                    <li key={idx} className="text-sm text-gray-600 flex items-start">
-                      <span className="text-primary-500 mr-2">•</span>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
+          {loading || !data ? (
+            <Skeleton className="h-48 w-full" />
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {data.tips.map((tip, index) => {
+                const Icon = iconMap[tip.icon] || HelpCircle;
+                return (
+                  <div key={index} className="card p-6">
+                    <Icon className="h-12 w-12 text-primary-500 mb-4" />
+                    <h3 className="text-xl font-semibold text-gray-800 mb-3">
+                      {tip.title}
+                    </h3>
+                    <p className="text-gray-600 mb-4 leading-relaxed">
+                      {tip.description}
+                    </p>
+                    <ul className="space-y-2">
+                      {tip.tips.map((item, idx) => (
+                        <li
+                          key={idx}
+                          className="text-sm text-gray-600 flex items-start"
+                        >
+                          <span className="text-primary-500 mr-2">•</span>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </section>
 
-        {/* Age-specific recommendations */}
+        {/* Age Groups */}
         <section className="mb-20">
           <h2 className="section-title">Насны бүлгээр ангилсан зөвлөмж</h2>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {ageGroups.map((group, index) => (
-              <div key={index} className="card p-6">
-                <h3 className="text-2xl font-bold text-primary-600 mb-4">
-                  {group.age}
-                </h3>
-                
-                <div className="mb-6">
-                  <h4 className="text-lg font-semibold text-gray-800 mb-3">
-                    Онцлог шинж:
-                  </h4>
-                  <ul className="space-y-2">
-                    {group.characteristics.map((char, idx) => (
-                      <li key={idx} className="text-gray-600 flex items-start">
-                        <span className="text-secondary-500 mr-2">•</span>
-                        {char}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+          {loading || !data ? (
+            <Skeleton className="h-48 w-full" />
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {data.ageGroups.map((group, index) => (
+                <div key={index} className="card p-6">
+                  <h3 className="text-2xl font-bold text-primary-600 mb-4">
+                    {group.age}
+                  </h3>
 
-                <div>
-                  <h4 className="text-lg font-semibold text-gray-800 mb-3">
-                    Зөвлөмж:
-                  </h4>
-                  <ul className="space-y-2">
-                    {group.recommendations.map((rec, idx) => (
-                      <li key={idx} className="text-gray-600 flex items-start">
-                        <span className="text-primary-500 mr-2">•</span>
-                        {rec}
-                      </li>
-                    ))}
-                  </ul>
+                  <div className="mb-6">
+                    <h4 className="text-lg font-semibold text-gray-800 mb-3">
+                      Онцлог шинж:
+                    </h4>
+                    <ul className="space-y-2">
+                      {group.characteristics.map((char, idx) => (
+                        <li
+                          key={idx}
+                          className="text-gray-600 flex items-start"
+                        >
+                          <span className="text-secondary-500 mr-2">•</span>
+                          {char}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div>
+                    <h4 className="text-lg font-semibold text-gray-800 mb-3">
+                      Зөвлөмж:
+                    </h4>
+                    <ul className="space-y-2">
+                      {group.recommendations.map((rec, idx) => (
+                        <li
+                          key={idx}
+                          className="text-gray-600 flex items-start"
+                        >
+                          <span className="text-primary-500 mr-2">•</span>
+                          {rec}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </section>
 
         {/* Common Mistakes */}
@@ -200,19 +176,27 @@ const ReadingTips = () => {
               <ul className="space-y-3">
                 <li className="flex items-start">
                   <span className="text-red-500 mr-2">✗</span>
-                  <span className="text-gray-600">Хүүхэд сонсохгүй байхад албадах</span>
+                  <span className="text-gray-600">
+                    Хүүхэд сонсохгүй байхад албадах
+                  </span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-red-500 mr-2">✗</span>
-                  <span className="text-gray-600">Хурдан, тодорхойгүй унших</span>
+                  <span className="text-gray-600">
+                    Хурдан, тодорхойгүй унших
+                  </span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-red-500 mr-2">✗</span>
-                  <span className="text-gray-600">Насанд тохирохгүй ном сонгох</span>
+                  <span className="text-gray-600">
+                    Насанд тохирохгүй ном сонгох
+                  </span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-red-500 mr-2">✗</span>
-                  <span className="text-gray-600">Анхаарал сарниулах орчинд унших</span>
+                  <span className="text-gray-600">
+                    Анхаарал сарниулах орчинд унших
+                  </span>
                 </li>
               </ul>
             </div>
@@ -223,7 +207,9 @@ const ReadingTips = () => {
               <ul className="space-y-3">
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2">✓</span>
-                  <span className="text-gray-600">Тэвчээртэй, урам зориг өгөх</span>
+                  <span className="text-gray-600">
+                    Тэвчээртэй, урам зориг өгөх
+                  </span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2">✓</span>
@@ -231,11 +217,15 @@ const ReadingTips = () => {
                 </li>
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2">✓</span>
-                  <span className="text-gray-600">Хүүхдийн сонирхлыг харгалзах</span>
+                  <span className="text-gray-600">
+                    Хүүхдийн сонирхлыг харгалзах
+                  </span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2">✓</span>
-                  <span className="text-gray-600">Тайван, тохиромжтой орчин бүтээх</span>
+                  <span className="text-gray-600">
+                    Тайван, тохиромжтой орчин бүтээх
+                  </span>
                 </li>
               </ul>
             </div>

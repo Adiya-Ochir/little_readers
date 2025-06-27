@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState, useCallback } from "react";
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -10,10 +9,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/components/ui/use-toast";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -22,45 +19,33 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/components/ui/use-toast";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Edit } from "lucide-react";
 
-interface DevelopmentArea {
+interface ReadingTip {
   id: string;
+  icon: string;
   title: string;
   description: string;
-  benefits: string[];
+  tips: string[];
 }
 
 interface AgeGroup {
   id: string;
-  label: string;
-  description: string;
+  age: string;
   characteristics: string[];
-  reading_benefits: string[];
+  recommendations: string[];
 }
 
-interface ReadingImpact {
-  id: string;
-  title: string;
-  description: string;
-}
+type EditType = "readingTip" | "ageGroup";
+type EditableItem = ReadingTip | AgeGroup;
+type FormState = Partial<ReadingTip & AgeGroup>;
 
-type EditType = "developmentArea" | "ageGroup" | "readingImpact";
-type EditableItem = DevelopmentArea | AgeGroup | ReadingImpact;
-type FormState = Partial<DevelopmentArea & AgeGroup & ReadingImpact>;
-
-interface CombinedData {
-  developmentAreas: DevelopmentArea[];
-  ageGroups: AgeGroup[];
-  readingImpacts: ReadingImpact[];
-}
-
-const DevelopmentManager: React.FC = () => {
-  const [data, setData] = useState<CombinedData>({
-    developmentAreas: [],
-    ageGroups: [],
-    readingImpacts: [],
-  });
+const ReadingTipsManager: React.FC = () => {
+  const [tips, setTips] = useState<ReadingTip[]>([]);
+  const [ageGroups, setAgeGroups] = useState<AgeGroup[]>([]);
   const [loading, setLoading] = useState(true);
   const [showDialog, setShowDialog] = useState(false);
   const [editType, setEditType] = useState<EditType | null>(null);
@@ -73,15 +58,11 @@ const DevelopmentManager: React.FC = () => {
   const fetchData = useCallback(async () => {
     try {
       const res = await fetch(
-        "http://localhost:5000/api/public/development/all",
-        {
-          headers: { Authorization: `Bearer ${getToken()}` },
-        }
+        "http://localhost:5000/api/public/reading-tips/full"
       );
-
       const json = await res.json();
-      if (!res.ok) throw new Error(json.error || "Амжилтгүй хүсэлт");
-      setData(json);
+      setTips(json.tips || []);
+      setAgeGroups(json.ageGroups || []);
     } catch (e) {
       console.error(e);
       toast({
@@ -108,12 +89,10 @@ const DevelopmentManager: React.FC = () => {
   const handleSave = async () => {
     if (!editType || !editingItem) return;
     let url = "";
-    if (editType === "developmentArea") {
-      url = `http://localhost:5000/api/development-areas/${editingItem.id}`;
+    if (editType === "readingTip") {
+      url = `http://localhost:5000/api/reading-tips/${editingItem.id}`;
     } else if (editType === "ageGroup") {
-      url = `http://localhost:5000/api/age-groups/${editingItem.id}`;
-    } else if (editType === "readingImpact") {
-      url = `http://localhost:5000/api/reading-impacts/${editingItem.id}`;
+      url = `http://localhost:5000/api/age-group2/${editingItem.id}`;
     }
 
     try {
@@ -127,13 +106,13 @@ const DevelopmentManager: React.FC = () => {
       });
 
       if (!res.ok) throw new Error("Failed to save changes");
-      setShowDialog(false);
-      fetchData();
       toast({
         title: "Амжилттай",
         description: "Хадгалагдлаа",
         variant: "success",
       });
+      setShowDialog(false);
+      fetchData();
     } catch (e) {
       console.error(e);
       toast({
@@ -145,19 +124,17 @@ const DevelopmentManager: React.FC = () => {
   };
 
   return (
-    <div className="p-4 sm:p-6 max-w-7xl mx-auto space-y-6">
-      <h1 className="text-lg md:text-xl font-semibold text-blue-600">
-        Хөгжлийн удирдлага
+    <div className="p-4 sm:p-6 max-w-7xl mx-auto space-y-8">
+      <h1 className="text-xl font-semibold text-blue-600">
+        Уншлагын зөвлөгөө удирдах
       </h1>
       {loading ? (
         <Skeleton className="h-12 w-full" />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/** Development Areas */}
-          <div className="overflow-x-auto">
-            <h2 className="text-base md:text-lg font-bold mb-2">
-              Хөгжлийн чиглэлүүд
-            </h2>
+        <>
+          {/* Reading Tips */}
+          <div>
+            <h2 className="text-lg font-bold mb-2">Зөвлөгөөнүүд</h2>
             <Table className="border border-gray-300">
               <TableHeader>
                 <TableRow className="[&>th]:border-r [&>th]:border-gray-200">
@@ -168,19 +145,19 @@ const DevelopmentManager: React.FC = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {data.developmentAreas.map((item, index) => (
+                {tips.map((tip, index) => (
                   <TableRow
-                    key={item.id}
+                    key={tip.id}
                     className="[&>td]:border-r [&>td]:border-gray-200"
                   >
                     <TableCell>{index + 1}</TableCell>
-                    <TableCell>{item.title}</TableCell>
-                    <TableCell>{item.description}</TableCell>
+                    <TableCell>{tip.title}</TableCell>
+                    <TableCell>{tip.description}</TableCell>
                     <TableCell>
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => openEditDialog("developmentArea", item)}
+                        onClick={() => openEditDialog("readingTip", tip)}
                       >
                         <Edit className="w-4 h-4 text-primary-600" />
                       </Button>
@@ -191,78 +168,38 @@ const DevelopmentManager: React.FC = () => {
             </Table>
           </div>
 
-          {/** Reading Impacts */}
-          <div className="overflow-x-auto">
-            <h2 className="text-base md:text-lg font-bold mb-2">
-              Уншлагын нөлөө
-            </h2>
-            <Table className="border border-gray-300">
-              <TableHeader>
-                <TableRow className="[&>th]:border-r [&>th]:border-gray-200">
-                  <TableHead>№</TableHead>
-                  <TableHead>Гарчиг</TableHead>
-                  <TableHead>Тайлбар</TableHead>
-                  <TableHead>Үйлдэл</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {data.readingImpacts.map((item, index) => (
-                  <TableRow
-                    key={item.id}
-                    className="[&>td]:border-r [&>td]:border-gray-200"
-                  >
-                    <TableCell>{index + 1}</TableCell>
-                    <TableCell>{item.title}</TableCell>
-                    <TableCell>{item.description}</TableCell>
-                    <TableCell>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => openEditDialog("readingImpact", item)}
-                      >
-                        <Edit className="w-4 h-4 text-primary-600" />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-
-          {/** Age Groups */}
-          <div className="overflow-x-auto md:col-span-2">
-            <h2 className="text-base md:text-lg font-bold mb-2">
-              Насны бүлгүүд
-            </h2>
+          {/* Age Groups */}
+          <div>
+            <h2 className="text-lg font-bold mb-2">Насны бүлгүүд</h2>
             <Table className="border border-gray-300">
               <TableHeader>
                 <TableRow className="[&>th]:border-r [&>th]:border-gray-200">
                   <TableHead>№</TableHead>
                   <TableHead>Нас</TableHead>
                   <TableHead>Онцлог шинж</TableHead>
-                  <TableHead>Ач тус</TableHead>
+                  <TableHead>Зөвлөмж</TableHead>
                   <TableHead>Үйлдэл</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {data.ageGroups.map((item, index) => (
+                {ageGroups.map((group, index) => (
                   <TableRow
-                    key={item.id}
+                    key={group.id}
                     className="[&>td]:border-r [&>td]:border-gray-200"
                   >
                     <TableCell>{index + 1}</TableCell>
-                    <TableCell>{item.label}</TableCell>
+                    <TableCell>{group.age}</TableCell>
                     <TableCell>
-                      <ul className="list-disc list-inside space-y-1">
-                        {item.characteristics.map((c, i) => (
+                      <ul className="list-disc list-inside">
+                        {group.characteristics.map((c, i) => (
                           <li key={i}>{c}</li>
                         ))}
                       </ul>
                     </TableCell>
                     <TableCell>
-                      <ul className="list-disc list-inside space-y-1">
-                        {item.reading_benefits.map((b, i) => (
-                          <li key={i}>{b}</li>
+                      <ul className="list-disc list-inside">
+                        {group.recommendations.map((r, i) => (
+                          <li key={i}>{r}</li>
                         ))}
                       </ul>
                     </TableCell>
@@ -270,7 +207,7 @@ const DevelopmentManager: React.FC = () => {
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => openEditDialog("ageGroup", item)}
+                        onClick={() => openEditDialog("ageGroup", group)}
                       >
                         <Edit className="w-4 h-4 text-primary-600" />
                       </Button>
@@ -280,7 +217,7 @@ const DevelopmentManager: React.FC = () => {
               </TableBody>
             </Table>
           </div>
-        </div>
+        </>
       )}
 
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
@@ -289,11 +226,10 @@ const DevelopmentManager: React.FC = () => {
             <DialogTitle>Мэдээлэл засах</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            {editType === "developmentArea" && (
+            {editType === "readingTip" && (
               <>
                 <Label>Гарчиг</Label>
                 <Input
-                  className="w-full"
                   value={formData.title || ""}
                   onChange={(e) =>
                     setFormData({ ...formData, title: e.target.value })
@@ -301,47 +237,34 @@ const DevelopmentManager: React.FC = () => {
                 />
                 <Label>Тайлбар</Label>
                 <Textarea
-                  className="w-full"
                   value={formData.description || ""}
                   onChange={(e) =>
                     setFormData({ ...formData, description: e.target.value })
                   }
                 />
-                <Label>Ач тусууд</Label>
+                <Label>Зөвлөмжүүд</Label>
                 <Textarea
-                  className="w-full"
-                  value={(formData.benefits || []).join("\n")}
+                  value={(formData.tips || []).join("\n")}
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      benefits: e.target.value.split("\n"),
+                      tips: e.target.value.split("\n"),
                     })
                   }
                 />
               </>
             )}
-
             {editType === "ageGroup" && (
               <>
-                <Label>Насны бүлэг</Label>
+                <Label>Нас</Label>
                 <Input
-                  className="w-full"
-                  value={formData.label || ""}
+                  value={formData.age || ""}
                   onChange={(e) =>
-                    setFormData({ ...formData, label: e.target.value })
-                  }
-                />
-                <Label>Тайлбар</Label>
-                <Textarea
-                  className="w-full"
-                  value={formData.description || ""}
-                  onChange={(e) =>
-                    setFormData({ ...formData, description: e.target.value })
+                    setFormData({ ...formData, age: e.target.value })
                   }
                 />
                 <Label>Онцлог шинжүүд</Label>
                 <Textarea
-                  className="w-full"
                   value={(formData.characteristics || []).join("\n")}
                   onChange={(e) =>
                     setFormData({
@@ -350,36 +273,14 @@ const DevelopmentManager: React.FC = () => {
                     })
                   }
                 />
-                <Label>Ач тусууд</Label>
+                <Label>Зөвлөмжүүд</Label>
                 <Textarea
-                  className="w-full"
-                  value={(formData.reading_benefits || []).join("\n")}
+                  value={(formData.recommendations || []).join("\n")}
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      reading_benefits: e.target.value.split("\n"),
+                      recommendations: e.target.value.split("\n"),
                     })
-                  }
-                />
-              </>
-            )}
-
-            {editType === "readingImpact" && (
-              <>
-                <Label>Гарчиг</Label>
-                <Input
-                  className="w-full"
-                  value={formData.title || ""}
-                  onChange={(e) =>
-                    setFormData({ ...formData, title: e.target.value })
-                  }
-                />
-                <Label>Тайлбар</Label>
-                <Textarea
-                  className="w-full"
-                  value={formData.description || ""}
-                  onChange={(e) =>
-                    setFormData({ ...formData, description: e.target.value })
                   }
                 />
               </>
@@ -396,4 +297,4 @@ const DevelopmentManager: React.FC = () => {
   );
 };
 
-export default DevelopmentManager;
+export default ReadingTipsManager;

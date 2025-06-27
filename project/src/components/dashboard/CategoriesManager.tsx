@@ -111,6 +111,7 @@ const CategoriesManager = () => {
             ? "Ангилал амжилттай засагдлаа."
             : "Ангилал амжилттай нэмэгдлээ.",
           duration: 2000,
+          variant: "success",
         });
       } else {
         toast({
@@ -149,6 +150,7 @@ const CategoriesManager = () => {
           title: "Устгалаа",
           description: "Ангилал устгагдлаа.",
           duration: 2000,
+          variant: "success",
         });
       } else {
         toast({
@@ -208,8 +210,10 @@ const CategoriesManager = () => {
     <div className="space-y-6 px-4 md:px-8 lg:px-16 py-4">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 className="text-xl font-semibold">Ангиллын удирдлага</h1>
-          <p className="text-muted-foreground text-sm">
+          <h1 className="text-xl font-semibold text-blue-600">
+            Ангиллын удирдлага
+          </h1>
+          <p className="text-muted-foreground text-sm text-black">
             Ангилал нэмэх, засах, устгах
           </p>
         </div>
@@ -232,9 +236,9 @@ const CategoriesManager = () => {
       </div>
 
       <div className="overflow-x-auto">
-        <Table>
+        <Table className="border border-gray-300">
           <TableHeader>
-            <TableRow>
+            <TableRow className="[&>th]:border-r [&>th]:border-gray-200">
               <TableHead>#</TableHead>
               <TableHead>Нэр</TableHead>
               <TableHead>Утга</TableHead>
@@ -253,7 +257,10 @@ const CategoriesManager = () => {
                   </TableRow>
                 ))
               : currentData.map((category, index) => (
-                  <TableRow key={category.id}>
+                  <TableRow
+                    key={category.id}
+                    className="[&>td]:border-r [&>td]:border-gray-200"
+                  >
                     <TableCell>
                       {(currentPage - 1) * pageSize + index + 1}
                     </TableCell>
@@ -391,7 +398,7 @@ const CategoriesManager = () => {
               <span className="font-semibold">
                 {categoryToDelete?.label || "энэ ангиллыг"}
               </span>{" "}
-             ангилалыг устгахдаа итгэлтэй байна уу?
+              ангилалыг устгахдаа итгэлтэй байна уу?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="pt-4">

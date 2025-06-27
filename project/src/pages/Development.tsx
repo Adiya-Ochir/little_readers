@@ -61,7 +61,7 @@ const Development: React.FC = () => {
   const [readingImpacts, setReadingImpacts] = useState<ReadingImpact[] | null>(
     null
   );
-  console.log("age", ageGroups);
+
   useEffect(() => {
     const fetchAll = async () => {
       try {
@@ -74,10 +74,6 @@ const Development: React.FC = () => {
         const areaJson = await areaRes.json();
         const ageJson = await ageRes.json();
         const impactJson = await impactRes.json();
-
-        console.log("DEV AREA JSON", areaJson);
-        console.log("AGE GROUP JSON", ageJson);
-        console.log("IMPACT JSON", impactJson);
 
         setDevelopmentAreas(areaJson?.developmentAreas || []);
         setAgeGroups(ageJson?.ageGroups || []);

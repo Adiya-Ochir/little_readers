@@ -105,8 +105,8 @@ const DashboardHome: React.FC<Props> = ({ admin }) => {
   return (
     <div className="space-y-6 px-4 py-6">
       <div>
-        <h1 className="text-2xl font-bold">Сайн байна уу, {admin.name}!</h1>
-        <p className="text-muted-foreground">Системийн ерөнхий статистик</p>
+        <h1 className="text-2xl font-bold text-blue-600">Сайн байна уу, {admin.name}!</h1>
+        <p className="text-muted-foreground text-black">Системийн ерөнхий статистик</p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">

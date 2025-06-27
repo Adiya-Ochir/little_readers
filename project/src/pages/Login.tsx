@@ -13,8 +13,6 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    console.log("password", e);
-
     e.preventDefault();
     setLoading(true);
     setError("");
@@ -138,14 +136,14 @@ const Login = () => {
             </button>
           </div>
 
-          <div className="text-center">
+          {/* <div className="text-center">
             <p className="text-sm text-gray-600">Тест хэрэглэгчид:</p>
             <p className="text-xs text-gray-500 mt-1">
               Super Admin: superadmin@example.com / admin123
               <br />
               Admin: admin@example.com / admin123
             </p>
-          </div>
+          </div> */}
         </form>
       </div>
     </div>

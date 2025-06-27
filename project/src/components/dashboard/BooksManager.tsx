@@ -148,6 +148,7 @@ const BooksManager = () => {
         title: "Амжилттай",
         description: "Мэдээлэл хадгалагдлаа",
         duration: 2000,
+        variant: "success",
       });
       fetchBooks();
       setShowModal(false);
@@ -166,7 +167,7 @@ const BooksManager = () => {
       }
     );
     if (res.ok) {
-      toast({ title: "Устгагдлаа", duration: 2000 });
+      toast({ title: "Устгагдлаа", duration: 2000, variant: "success" });
       fetchBooks();
     }
     setShowDeleteDialog(false);
@@ -201,8 +202,10 @@ const BooksManager = () => {
     <div className="space-y-6 px-4 md:px-8 lg:px-16 py-4">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 className="text-xl font-semibold">Номын удирдлага</h1>
-          <p className="text-muted-foreground text-sm">
+          <h1 className="text-xl font-semibold text-blue-600">
+            Номын удирдлага
+          </h1>
+          <p className="text-muted-foreground text-sm text-black">
             Ном нэмэх, засах, устгах
           </p>
         </div>
@@ -224,9 +227,9 @@ const BooksManager = () => {
       </div>
 
       <div className="overflow-x-auto">
-        <Table>
+        <Table className="border border-gray-300">
           <TableHeader>
-            <TableRow>
+            <TableRow className="[&>th]:border-r [&>th]:border-gray-200">
               <TableHead>#</TableHead>
               <TableHead>Ном</TableHead>
               <TableHead>Зохиолч</TableHead>
@@ -246,7 +249,10 @@ const BooksManager = () => {
                   </TableRow>
                 ))
               : currentData.map((book, index) => (
-                  <TableRow key={book.id}>
+                  <TableRow
+                    key={book.id}
+                    className="[&>td]:border-r [&>td]:border-gray-200"
+                  >
                     <TableCell>
                       {(currentPage - 1) * pageSize + index + 1}
                     </TableCell>

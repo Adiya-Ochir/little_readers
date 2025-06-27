@@ -162,14 +162,14 @@ const AdminsManager = () => {
         description: editingAdmin
           ? "Админы мэдээлэл шинэчлэгдлээ."
           : "Шинэ админ амжилттай нэмэгдлээ.",
-        duration: 3000,
+        duration: 2000,
       });
     } else {
       toast({
         title: "Алдаа",
         description: "Үйлдлийг гүйцэтгэж чадсангүй",
         variant: "destructive",
-        duration: 3000,
+        duration: 2000,
       });
     }
   };
@@ -181,7 +181,7 @@ const AdminsManager = () => {
         title: "Алдаа",
         description: "Нууц үг таарахгүй байна",
         variant: "destructive",
-        duration: 3000,
+        duration: 2000,
       });
       return;
     }
@@ -202,7 +202,7 @@ const AdminsManager = () => {
     toast({
       title: "Амжилттай",
       description: "Нууц үг шинэчлэгдлээ",
-      duration: 3000,
+      duration: 2000,
     });
   };
 
@@ -222,14 +222,14 @@ const AdminsManager = () => {
         toast({
           title: "Амжилттай",
           description: "Админ устгагдлаа.",
-          duration: 3000,
+          duration: 2000,
         });
       } else {
         toast({
           title: "Алдаа",
           description: "Устгаж чадсангүй.",
           variant: "destructive",
-          duration: 3000,
+          duration: 2000,
         });
       }
     } catch (error) {
@@ -238,7 +238,7 @@ const AdminsManager = () => {
         title: "Алдаа",
         description: "Устгах үед алдаа гарлаа.",
         variant: "destructive",
-        duration: 3000,
+        duration: 2000,
       });
     } finally {
       setShowDeleteDialog(false);
