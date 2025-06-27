@@ -21,6 +21,7 @@ const PORT = process.env.PORT || 5000;
 app.use(
   cors({
     origin: [
+      "https://little-readers.vercel.app",
       "https://little-readers-3kh7819gw-adiyaochirs-projects.vercel.app",
       "http://localhost:5173",
     ],
