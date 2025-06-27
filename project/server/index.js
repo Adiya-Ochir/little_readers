@@ -24,10 +24,13 @@ app.use(
       "https://little-readers.vercel.app",
       "https://little-readers-3kh7819gw-adiyaochirs-projects.vercel.app",
       "http://localhost:5173",
+      "https://littlereaders.mn",
+      "https://www.littlereaders.mn",
     ],
     credentials: true,
   })
 );
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
