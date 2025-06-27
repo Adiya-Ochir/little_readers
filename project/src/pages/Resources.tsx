@@ -85,7 +85,7 @@ const Resources = () => {
   const fetchResources = async () => {
     try {
       const response = await fetch(
-        "http://localhost:5000/api/public/resources"
+        `${import.meta.env.VITE_API_URL}/api/public/resources`
       );
       const data = await response.json();
       setResources(data.resources || []);

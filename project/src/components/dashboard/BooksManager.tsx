@@ -87,7 +87,7 @@ const BooksManager = () => {
 
   const fetchBooks = async () => {
     const token = localStorage.getItem("token");
-    const res = await fetch("http://localhost:5000/api/books", {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/books`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     const data = await res.json();
@@ -97,7 +97,7 @@ const BooksManager = () => {
 
   const fetchCategories = async () => {
     const token = localStorage.getItem("token");
-    const res = await fetch("http://localhost:5000/api/categories", {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/categories`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     const data = await res.json();
@@ -130,8 +130,8 @@ const BooksManager = () => {
     e.preventDefault();
     const token = localStorage.getItem("token");
     const url = editingBook
-      ? `http://localhost:5000/api/books/${editingBook.id}`
-      : "http://localhost:5000/api/books";
+      ? `${import.meta.env.VITE_API_URL}/api/books/${editingBook.id}`
+      : `${import.meta.env.VITE_API_URL}/api/books`;
     const method = editingBook ? "PUT" : "POST";
 
     const res = await fetch(url, {
@@ -160,7 +160,7 @@ const BooksManager = () => {
     if (!bookToDelete) return;
     const token = localStorage.getItem("token");
     const res = await fetch(
-      `http://localhost:5000/api/books/${bookToDelete.id}`,
+      `${import.meta.env.VITE_API_URL}/api/books/${bookToDelete.id}`,
       {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
@@ -177,7 +177,7 @@ const BooksManager = () => {
   const toggleStatus = async (id: string) => {
     const token = localStorage.getItem("token");
     const res = await fetch(
-      `http://localhost:5000/api/books/${id}/toggle-status`,
+      `${import.meta.env.VITE_API_URL}/api/books/${id}/toggle-status`,
       {
         method: "PATCH",
         headers: { Authorization: `Bearer ${token}` },

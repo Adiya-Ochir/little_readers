@@ -73,7 +73,7 @@ const DevelopmentManager: React.FC = () => {
   const fetchData = useCallback(async () => {
     try {
       const res = await fetch(
-        "http://localhost:5000/api/public/development/all",
+        `${import.meta.env.VITE_API_URL}/api/public/development/all`,
         {
           headers: { Authorization: `Bearer ${getToken()}` },
         }
@@ -109,11 +109,15 @@ const DevelopmentManager: React.FC = () => {
     if (!editType || !editingItem) return;
     let url = "";
     if (editType === "developmentArea") {
-      url = `http://localhost:5000/api/development-areas/${editingItem.id}`;
+      url = `${import.meta.env.VITE_API_URL}/api/development-areas/${
+        editingItem.id
+      }`;
     } else if (editType === "ageGroup") {
-      url = `http://localhost:5000/api/age-groups/${editingItem.id}`;
+      url = `${import.meta.env.VITE_API_URL}/api/age-groups/${editingItem.id}`;
     } else if (editType === "readingImpact") {
-      url = `http://localhost:5000/api/reading-impacts/${editingItem.id}`;
+      url = `${import.meta.env.VITE_API_URL}/api/reading-impacts/${
+        editingItem.id
+      }`;
     }
 
     try {

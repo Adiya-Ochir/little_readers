@@ -58,7 +58,7 @@ const ReadingTipsManager: React.FC = () => {
   const fetchData = useCallback(async () => {
     try {
       const res = await fetch(
-        "http://localhost:5000/api/public/reading-tips/full"
+        `${import.meta.env.VITE_API_URL}/api/public/reading-tips/full`
       );
       const json = await res.json();
       setTips(json.tips || []);
@@ -90,9 +90,11 @@ const ReadingTipsManager: React.FC = () => {
     if (!editType || !editingItem) return;
     let url = "";
     if (editType === "readingTip") {
-      url = `http://localhost:5000/api/reading-tips/${editingItem.id}`;
+      url = `${import.meta.env.VITE_API_URL}/api/reading-tips/${
+        editingItem.id
+      }`;
     } else if (editType === "ageGroup") {
-      url = `http://localhost:5000/api/age-group2/${editingItem.id}`;
+      url = `${import.meta.env.VITE_API_URL}/api/age-group2/${editingItem.id}`;
     }
 
     try {

@@ -43,12 +43,14 @@ const BookRecommendations: React.FC = () => {
 
   const fetchData = async () => {
     try {
-      const booksRes = await fetch("http://localhost:5000/api/public/books");
+      const booksRes = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/public/books`
+      );
       const booksData = await booksRes.json();
       setBooks(booksData.books || []);
 
       const categoriesRes = await fetch(
-        "http://localhost:5000/api/public/categories"
+        `${import.meta.env.VITE_API_URL}/api/public/categories`
       );
       const categoriesData = await categoriesRes.json();
       setCategories([
@@ -56,7 +58,9 @@ const BookRecommendations: React.FC = () => {
         ...(categoriesData.categories || []),
       ]);
 
-      const ageRes = await fetch("http://localhost:5000/api/public/age-groups");
+      const ageRes = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/public/age-groups`
+      );
       const ageData = await ageRes.json();
       setAgeGroups([
         { value: "all", label: "Бүх нас" },

@@ -48,7 +48,7 @@ const ReadingTips = () => {
     const fetchTips = async () => {
       try {
         const res = await fetch(
-          "http://localhost:5000/api/public/reading-tips/full"
+          `${import.meta.env.VITE_API_URL}/api/public/reading-tips/full`
         );
         const json = await res.json();
         setData(json);

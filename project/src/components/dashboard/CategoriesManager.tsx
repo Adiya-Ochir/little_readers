@@ -58,11 +58,14 @@ const CategoriesManager = () => {
   const fetchCategories = useCallback(async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:5000/api/categories", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/categories`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       const data = await response.json();
       setCategories(data.categories || []);
     } catch (error) {
@@ -87,8 +90,8 @@ const CategoriesManager = () => {
     try {
       const token = localStorage.getItem("token");
       const url = editingCategory
-        ? `http://localhost:5000/api/categories/${editingCategory.id}`
-        : "http://localhost:5000/api/categories";
+        ? `${import.meta.env.VITE_API_URL}/api/categories/${editingCategory.id}`
+        : `${import.meta.env.VITE_API_URL}/api/categories`;
       const method = editingCategory ? "PUT" : "POST";
 
       const response = await fetch(url, {
@@ -137,7 +140,7 @@ const CategoriesManager = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        `http://localhost:5000/api/categories/${categoryToDelete.id}`,
+        `${import.meta.env.VITE_API_URL}/api/categories/${categoryToDelete.id}`,
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },

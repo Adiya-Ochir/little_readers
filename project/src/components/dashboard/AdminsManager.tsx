@@ -89,11 +89,14 @@ const AdminsManager = () => {
   const fetchAdmins = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:5000/api/admins", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/admins`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       const data = await response.json();
       setAdmins(data.admins || []);
     } catch (err) {
@@ -131,8 +134,8 @@ const AdminsManager = () => {
     e.preventDefault();
     const token = localStorage.getItem("token");
     const url = editingAdmin
-      ? `http://localhost:5000/api/admins/${editingAdmin.id}`
-      : "http://localhost:5000/api/admins";
+      ? `${import.meta.env.VITE_API_URL}/api/admins/${editingAdmin.id}`
+      : `${import.meta.env.VITE_API_URL}/api/admins`;
     const method = editingAdmin ? "PUT" : "POST";
     const payload = editingAdmin
       ? {
@@ -187,7 +190,9 @@ const AdminsManager = () => {
     }
     const token = localStorage.getItem("token");
     await fetch(
-      `http://localhost:5000/api/admins/${resetPasswordAdmin?.id}/reset-password`,
+      `${import.meta.env.VITE_API_URL}/api/admins/${
+        resetPasswordAdmin?.id
+      }/reset-password`,
       {
         method: "POST",
         headers: {
@@ -211,7 +216,7 @@ const AdminsManager = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        `http://localhost:5000/api/admins/${adminToDelete.id}`,
+        `${import.meta.env.VITE_API_URL}/api/admins/${adminToDelete.id}`,
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },

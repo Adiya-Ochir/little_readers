@@ -29,27 +29,36 @@ const DashboardHome: React.FC<Props> = ({ admin }) => {
         "Content-Type": "application/json",
       };
 
-      const booksRes = await fetch("http://localhost:5000/api/books?limit=1", {
-        headers,
-      });
+      const booksRes = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/books?limit=1`,
+        {
+          headers,
+        }
+      );
       const booksData = await booksRes.json();
 
       const categoriesRes = await fetch(
-        "http://localhost:5000/api/categories",
+        `${import.meta.env.VITE_API_URL}/api/categories`,
         { headers }
       );
       const categoriesData = await categoriesRes.json();
 
-      const resourcesRes = await fetch("http://localhost:5000/api/resources", {
-        headers,
-      });
+      const resourcesRes = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/resources`,
+        {
+          headers,
+        }
+      );
       const resourcesData = await resourcesRes.json();
 
       let totalAdmins = 0;
       if (admin.role === "super_admin") {
-        const adminsRes = await fetch("http://localhost:5000/api/admins", {
-          headers,
-        });
+        const adminsRes = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/admins`,
+          {
+            headers,
+          }
+        );
         const adminsData = await adminsRes.json();
         totalAdmins = adminsData.admins?.length || 0;
       }
@@ -105,8 +114,12 @@ const DashboardHome: React.FC<Props> = ({ admin }) => {
   return (
     <div className="space-y-6 px-4 py-6">
       <div>
-        <h1 className="text-2xl font-bold text-blue-600">Сайн байна уу, {admin.name}!</h1>
-        <p className="text-muted-foreground text-black">Системийн ерөнхий статистик</p>
+        <h1 className="text-2xl font-bold text-blue-600">
+          Сайн байна уу, {admin.name}!
+        </h1>
+        <p className="text-muted-foreground text-black">
+          Системийн ерөнхий статистик
+        </p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
